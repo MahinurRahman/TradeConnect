@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TradeConnect BD-DE</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: system-ui, sans-serif; background: #f0f4f8; min-height: 100vh; padding: 2rem; }
+        .container { max-width: 800px; margin: 0 auto; }
+        h1 { color: #1a365d; margin-bottom: 0.5rem; }
+        .subtitle { color: #4a5568; margin-bottom: 2rem; }
+        .card { background: white; border-radius: 12px; padding: 2rem; box-shadow: 0 4px 6px rgba(0,0,0,0.07); margin-bottom: 1.5rem; }
+        label { display: block; font-weight: 600; margin-bottom: 0.5rem; color: #2d3748; }
+        select, textarea { width: 100%; padding: 0.75rem; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 1rem; margin-bottom: 1rem; }
+        textarea { min-height: 100px; resize: vertical; }
+        button { background: #2b6cb0; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; font-size: 1rem; cursor: pointer; }
+        button:hover { background: #2c5282; }
+        button:disabled { background: #a0aec0; cursor: not-allowed; }
+        .result { background: #f7fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1.5rem; white-space: pre-wrap; font-size: 0.9rem; line-height: 1.6; }
+        .loading { display: none; color: #4a5568; padding: 1rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>TradeConnect BD-DE</h1>
+        <p class="subtitle">AI-powered trade recommendations for Bangladesh-Germany commerce</p>
+
+        <div class="card">
+            <label for="direction">Trade Direction</label>
+            <select id="direction">
+                <option value="bd_to_de">Bangladesh to Germany</option>
+                <option value="de_to_bd">Germany to Bangladesh</option>
+            </select>
+
+            <label for="query">Describe your trade</label>
+            <textarea id="query" placeholder="e.g., I want to export medical instruments from Germany to Bangladesh"></textarea>
+
+            <button id="submitBtn" onclick="getRecommendation()">Get AI Recommendation</button>
+        </div>
+
+        <div class="loading" id="loading">Analyzing your trade query with AI...</div>
+
+        <div class="card" id="resultCard" style="display:none;">
+            <label>AI Recommendation</label>
+            <div class="result" id="result"></div>
+        </div>
+    </div>
+
+    <script>
+        async function getRecommendation() {
+            const query = document.getElementById('query').value;
+            const direction = document.getElementById('direction').value;
+            const btn = document.getElementById('submitBtn');
+            const loading = document.getElementById('loading');
+            const resultCard = document.getElementById('resultCard');
+            const result = document.getElementById('result');
+
+            if (!query.trim()) return;
+
+            btn.disabled = true;
+            loading.style.display = 'block';
+            resultCard.style.display = 'none';
+
+            try {
+                const response = await fetch('/recommend', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ query, direction })
+                });
+                const data = await response.json();
+                result.textContent = data.recommendation;
+                resultCard.style.display = 'block';
+            } catch (error) {
+                result.textContent = 'Error: ' + error.message;
+                resultCard.style.display = 'block';
+            } finally {
+                btn.disabled = false;
+                loading.style.display = 'none';
+            }
+        }
+    </script>
+
+</body>
+</html>

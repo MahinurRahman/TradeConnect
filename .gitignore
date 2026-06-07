@@ -1,0 +1,10 @@
+# Ignore API keys and local environment secrets
+.env
+
+# Ignore Python compiled cache
+__pycache__/
+*.pyc
+
+# Ignore local virtual environment
+venv/
+/venv/
