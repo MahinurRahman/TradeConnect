@@ -23,7 +23,10 @@ jobs:
       - name: Run linting
         run: pip install ruff && ruff check .
 
-      - name: Run health check test
+            - name: Run health check test
+        env:
+          # Inject a dummy key so the google-genai client doesn't crash on import
+          GEMINI_API_KEY: "mock_api_key_for_ci_testing" 
         run: |
           pip install httpx
           python -c "
@@ -34,6 +37,7 @@ jobs:
           assert response.status_code == 200
           assert response.json()['status'] == 'healthy'
           print('Health check passed!')
+          "
 
   build-and-push:
     needs: test
