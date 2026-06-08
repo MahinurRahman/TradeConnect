@@ -32,8 +32,6 @@ When a user describes a trade they want to make, provide:
 
 Format your response as structured JSON with keys: product_categories, compliance_notes, cost_optimization, trade_patterns."""
 
-from pydantic import BaseModel
-
 # Describe the exact JSON keys we want Gemini to return
 class GeminiTradeResponse(BaseModel):
     product_categories: str
