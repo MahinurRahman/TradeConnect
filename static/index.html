@@ -43,37 +43,34 @@
 
         <!-- Beautiful, color-coded grid container -->
         <div class="card" id="resultCard" style="display:none;">
-            <h2 style="color: #1a365d; margin-bottom: 1.5rem; font-size: 1.4rem; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+            <h2 style="color: #1a365d; margin-bottom: 1.5rem; font-size: 1.4rem; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.5rem;">
                 🌍 Trade Strategy Analysis
             </h2>
             
             <div style="display: grid; grid-template-columns: 1fr; gap: 1.5rem;">
-                <!-- 1. Product Categories Block -->
-                <div style="background: #ebf8ff; border-left: 4px solid #3182ce; padding: 1.25rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
-                    <h3 style="color: #2b6cb0; margin-bottom: 0.5rem; font-size: 1.1rem; display: flex; align-items: center; gap: 0.5rem;">📦 Recommended Product Categories & HS Codes</h3>
-                    <p id="productCategories" style="line-height: 1.6; color: #2d3748; white-space: pre-line; font-size: 0.95rem;"></p>
+                <div id="productCard" style="background: #ebf8ff; border-left: 4px solid #3182ce; padding: 1.25rem; border-radius: 8px;">
+                    <h3 style="color: #2b6cb0; margin-bottom: 0.5rem; font-size: 1.1rem;">📦 Recommended Product Categories & HS Codes</h3>
+                    <p id="productCategories" style="line-height: 1.6; color: #2d3748; white-space: pre-line;"></p>
                 </div>
 
-                <!-- 2. Compliance Block -->
-                <div style="background: #f0fff4; border-left: 4px solid #38a169; padding: 1.25rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
-                    <h3 style="color: #276749; margin-bottom: 0.5rem; font-size: 1.1rem; display: flex; align-items: center; gap: 0.5rem;">📋 Regulatory & Compliance Requirements</h3>
-                    <p id="complianceNotes" style="line-height: 1.6; color: #2d3748; white-space: pre-line; font-size: 0.95rem;"></p>
+                <div id="complianceCard" style="background: #f0fff4; border-left: 4px solid #38a169; padding: 1.25rem; border-radius: 8px;">
+                    <h3 style="color: #276749; margin-bottom: 0.5rem; font-size: 1.1rem;">📋 Regulatory & Compliance Requirements</h3>
+                    <p id="complianceNotes" style="line-height: 1.6; color: #2d3748; white-space: pre-line;"></p>
                 </div>
 
-                <!-- 3. Cost Optimization Block -->
-                <div style="background: #fffaf0; border-left: 4px solid #dd6b20; padding: 1.25rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
-                    <h3 style="color: #dd6b20; margin-bottom: 0.5rem; font-size: 1.1rem; display: flex; align-items: center; gap: 0.5rem;">💰 Cost Optimization & Logistics Strategies</h3>
-                    <p id="costOptimization" style="line-height: 1.6; color: #2d3748; white-space: pre-line; font-size: 0.95rem;"></p>
+                <div id="costCard" style="background: #fffaf0; border-left: 4px solid #dd6b20; padding: 1.25rem; border-radius: 8px;">
+                    <h3 style="color: #dd6b20; margin-bottom: 0.5rem; font-size: 1.1rem;">💰 Cost Optimization & Logistics Strategies</h3>
+                    <p id="costOptimization" style="line-height: 1.6; color: #2d3748; white-space: pre-line;"></p>
                 </div>
 
-                <!-- 4. Trade Patterns Block -->
-                <div style="background: #f7fafc; border-left: 4px solid #4a5568; padding: 1.25rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
-                    <h3 style="color: #4a5568; margin-bottom: 0.5rem; font-size: 1.1rem; display: flex; align-items: center; gap: 0.5rem;">📈 Successful Trade Patterns</h3>
-                    <p id="tradePatterns" style="line-height: 1.6; color: #2d3748; white-space: pre-line; font-size: 0.95rem;"></p>
+                <div id="patternCard" style="background: #f7fafc; border-left: 4px solid #4a5568; padding: 1.25rem; border-radius: 8px;">
+                    <h3 style="color: #4a5568; margin-bottom: 0.5rem; font-size: 1.1rem;">📈 Successful Trade Patterns</h3>
+                    <p id="tradePatterns" style="line-height: 1.6; color: #2d3748; white-space: pre-line;"></p>
                 </div>
             </div>
             
-            <div id="rawFallback" class="result" style="display:none; margin-top: 1.5rem; border-top: 1px dashed #cbd5e0; padding-top: 1.5rem;"></div>
+            <!-- Debug/Fallback Panel -->
+            <div id="rawFallback" class="result" style="display:none; margin-top: 1.5rem; border-top: 1px dashed #cbd5e0; padding-top: 1.5rem; background: #fff5f5; border-color: #feb2b2; color: #9b2c2c;"></div>
         </div>
     </div>
 
@@ -98,10 +95,11 @@
             resultCard.style.display = 'none';
             rawFallback.style.display = 'none';
 
-            productCategories.textContent = '';
-            complianceNotes.textContent = '';
-            costOptimization.textContent = '';
-            tradePatterns.textContent = '';
+            // Hide cards until we verify we have parsed JSON
+            document.getElementById('productCard').style.display = 'none';
+            document.getElementById('complianceCard').style.display = 'none';
+            document.getElementById('costCard').style.display = 'none';
+            document.getElementById('patternCard').style.display = 'none';
 
             try {
                 const response = await fetch('/recommend', {
@@ -111,33 +109,39 @@
                 });
                 const data = await response.json();
                 
+                let rawText = data.recommendation || "";
+                
+                // SELF-HEALING: Strip markdown JSON blocks if present
+                if (rawText.includes("```json")) {
+                    rawText = rawText.split("```json")[1].split("```")[0].trim();
+                } else if (rawText.includes("```")) {
+                    rawText = rawText.split("```")[1].split("```")[0].trim();
+                }
+
                 try {
-                    // Try parsing the structured string response into a clean JS object
-                    const recObj = JSON.parse(data.recommendation);
+                    // Try parsing the cleaned text
+                    const recObj = JSON.parse(rawText);
                     
-                    productCategories.textContent = recObj.product_categories;
-                    complianceNotes.textContent = recObj.compliance_notes;
-                    costOptimization.textContent = recObj.cost_optimization;
-                    tradePatterns.textContent = recObj.trade_patterns;
+                    productCategories.textContent = recObj.product_categories || recObj.productCategories || "N/A";
+                    complianceNotes.textContent = recObj.compliance_notes || recObj.complianceNotes || "N/A";
+                    costOptimization.textContent = recObj.cost_optimization || recObj.costOptimization || "N/A";
+                    tradePatterns.textContent = recObj.trade_patterns || recObj.tradePatterns || "N/A";
                     
-                    productCategories.parentElement.style.display = 'block';
-                    complianceNotes.parentElement.style.display = 'block';
-                    costOptimization.parentElement.style.display = 'block';
-                    tradePatterns.parentElement.style.display = 'block';
+                    // Show standard structured card blocks
+                    document.getElementById('productCard').style.display = 'block';
+                    document.getElementById('complianceCard').style.display = 'block';
+                    document.getElementById('costCard').style.display = 'block';
+                    document.getElementById('patternCard').style.display = 'block';
                 } catch (parseError) {
+                    // Fallback: If parsing fails, render raw text in the diagnostic box
                     console.warn('Could not parse response as JSON. Displaying raw text.', parseError);
-                    rawFallback.textContent = data.recommendation;
+                    rawFallback.innerHTML = "<strong>⚠️ Notice:</strong> Displaying raw text output because the response format was not standard JSON.<br><br>" + data.recommendation;
                     rawFallback.style.display = 'block';
-                    
-                    productCategories.parentElement.style.display = 'none';
-                    complianceNotes.parentElement.style.display = 'none';
-                    costOptimization.parentElement.style.display = 'none';
-                    tradePatterns.parentElement.style.display = 'none';
                 }
                 
                 resultCard.style.display = 'block';
             } catch (error) {
-                rawFallback.textContent = 'Error: ' + error.message;
+                rawFallback.textContent = 'Network Error: ' + error.message;
                 rawFallback.style.display = 'block';
                 resultCard.style.display = 'block';
             } finally {
@@ -146,6 +150,5 @@
             }
         }
     </script>
-    
 </body>
 </html>
