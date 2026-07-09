@@ -10,7 +10,7 @@ The application is built using a modern cloud-native stack, containerized with D
 ## 🚀 Key Features
 
 *   **Trade Strategy Advisor (Left Engine):** Analyzes custom trade queries based on real-world $9.81B Bangladesh-Germany bilateral commerce data (such as textile dominances and machinery imports), outputting recommended HS code ranges, compliance notes, and cost-optimization strategies.
-*   **Logistics & Route Comparison (Right Engine - Secret Mission):** Compares Sea, Air, and Multimodal shipping options between specified origin/destination cities, detailing transit times, cost estimates, reliability scores (1-10), key advantages, and risks.
+*   **Logistics & Route Comparison (Right Engine - depreciated):** Compares Sea, Air, and Multimodal shipping options between specified origin/destination cities, detailing transit times, cost estimates, reliability scores (1-10), key advantages, and risks.
 *   **Strict JSON Schema Enforcement:** Integrated with Pydantic schemas to force Gemini to output highly structured, machine-readable JSON data directly at the API layer.
 *   **Self-Healing Frontend:** Features a responsive HTML/CSS dashboard with a custom JavaScript parser that strips out markdown wrappers, sanitizes responses, and cleanly renders recommendations into color-coded strategy cards with live error fallback panels.
 
